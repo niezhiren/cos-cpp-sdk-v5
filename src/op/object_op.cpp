@@ -189,6 +189,10 @@ bool ObjectOp::CheckUploadPart(const PutObjectByFileReq& req,
 
   while (!list_over_flag) {
     std::string marker = StringUtil::IntToString(part_num_marker);
+    if (req.IsHttps()) {
+        list_req.SetHttps();
+        list_req.SetCaLocation(req.GetCaLocation());
+    }
     list_req.SetPartNumberMarker(marker);
     CosResult result = ListParts(list_req, &resp);
     // Add to the parts_info;
