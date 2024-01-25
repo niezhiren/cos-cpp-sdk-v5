@@ -63,6 +63,7 @@ std::string ObjectOp::GetResumableUploadID(const PutObjectByFileReq& originReq,
     req.SetHttps();
     req.SetCaLocation(originReq.GetCaLocation());
   }
+  req.SetSignHeaderHost(originReq.SignHeaderHost());
   ListMultipartUploadResp resp;
 
   std::string host = CosSysConfig::GetHost(GetAppId(), m_config->GetRegion(),
@@ -193,6 +194,7 @@ bool ObjectOp::CheckUploadPart(const PutObjectByFileReq& req,
         list_req.SetHttps();
         list_req.SetCaLocation(req.GetCaLocation());
     }
+    list_req.SetSignHeaderHost(req.SignHeaderHost());
     list_req.SetPartNumberMarker(marker);
     CosResult result = ListParts(list_req, &resp);
     // Add to the parts_info;
@@ -603,6 +605,7 @@ CosResult ObjectOp::MultiUploadObject(const PutObjectByFileReq& req,
         init_req.SetHttps();
         init_req.SetCaLocation(req.GetCaLocation());
     }
+    init_req.SetSignHeaderHost(req.SignHeaderHost());
     init_req.AddHeaders(req.GetHeaders());
     init_req.SetConnTimeoutInms(req.GetConnTimeoutInms());
     init_req.SetRecvTimeoutInms(req.GetRecvTimeoutInms());
@@ -683,6 +686,7 @@ CosResult ObjectOp::MultiUploadObject(const PutObjectByFileReq& req,
       comp_req.SetHttps();
       comp_req.SetCaLocation(req.GetCaLocation());
   }
+  comp_req.SetSignHeaderHost(req.SignHeaderHost());
   comp_result = CompleteMultiUpload(comp_req, &comp_resp);
   // check crc64 if needed
   if (req.CheckCRC64() && comp_result.IsSucc() &&

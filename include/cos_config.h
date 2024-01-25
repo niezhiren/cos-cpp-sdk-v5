@@ -92,6 +92,7 @@ class CosConfig {
     m_is_domain_same_to_host = config.m_is_domain_same_to_host;
     m_is_domain_same_to_host_enable = config.m_is_domain_same_to_host;
     m_config_parsed = config.m_config_parsed;
+    m_vpath = config.m_vpath;
   }
 
   /// \brief CosConfig赋值构造函数
@@ -110,6 +111,7 @@ class CosConfig {
     m_is_domain_same_to_host = config.m_is_domain_same_to_host;
     m_is_domain_same_to_host_enable = config.m_is_domain_same_to_host;
     m_config_parsed = config.m_config_parsed;
+    m_vpath = config.m_vpath;
     return *this;
   }
 
@@ -205,6 +207,9 @@ class CosConfig {
   static bool JsonObjectGetBoolValue(const Poco::JSON::Object::Ptr& json_object,
                                      const std::string& key, bool* value);
 
+  void SetVirtualPath(const std::string& vpath) { m_vpath = vpath; }
+  std::string GetVirtualPath() const { return m_vpath; }
+
  private:
   mutable std::mutex m_lock;
   uint64_t m_app_id;
@@ -220,6 +225,8 @@ class CosConfig {
   bool m_is_domain_same_to_host;
   bool m_is_domain_same_to_host_enable;
   bool m_config_parsed;
+
+  std::string m_vpath;
 };
 
 typedef std::shared_ptr<CosConfig> SharedConfig;

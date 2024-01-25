@@ -322,6 +322,7 @@ std::string BaseOp::GetRealUrl(const std::string& host, const std::string& path,
   std::string dest_uri;
   std::string dest_host = host;
   std::string dest_path = path;
+  std::string vpath;
   std::string dest_protocal = "http://";
   if (is_https) {
     dest_protocal = "https://";
@@ -348,7 +349,13 @@ std::string BaseOp::GetRealUrl(const std::string& host, const std::string& path,
     dest_host = GetGlobalDnsCacheInstance().Resolve(host);
   }
 
-  dest_uri = dest_protocal + dest_host + CodecUtil::EncodeKey(dest_path);
+  if (m_config) {
+      vpath = m_config->GetVirtualPath();
+      if (!vpath.empty() && '/' != vpath[0]) {
+          vpath = "/" + vpath;
+      }
+  }
+  dest_uri = dest_protocal + dest_host + vpath + CodecUtil::EncodeKey(dest_path);
   SDK_LOG_DBG("dest_uri: %s", dest_uri.c_str());
   return dest_uri;
 }
